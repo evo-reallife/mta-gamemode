@@ -91,7 +91,7 @@ end
 --player is near a gang zone, but did not enter it by now
 function Area:onSurroundingEnter(hitElement, dim)
 	if hitElement and getElementType(hitElement) == "player" and dim and not hitElement:isInGangwar() then
-		hitElement:sendWarning("Du näherst dich einem aktiven Gangwar-Gebiet! Bitte verlasse dieses Areal und nutze eine andere Route oder warte, bis der Kampf vorbei ist.")
+		hitElement:sendWarning("You are approaching an active gang war zone! Please leave this area and take a different route or wait until the fight is over.")
 	end
 end
 

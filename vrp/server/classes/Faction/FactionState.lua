@@ -921,7 +921,7 @@ function FactionState:getFullReasonFromShortcut(reason)
 	elseif string.lower(reason) == "rpg" or string.lower(reason) == "granate" then
 		reason = "Possession of Explosive Weapons"
 		amount = 6
-	elseif string.lower(reason) == "army" or string.lower(reason) == "area" or string.lower(reason) == "sasf" string.lower(reason) == "a51" then
+	elseif string.lower(reason) == "army" or string.lower(reason) == "area" or string.lower(reason) == "sasf" or string.lower(reason) == "a51" then
         reason = "Break-in at the SASF base"
         amount = 6
     elseif string.lower(reason) == "ht" then
