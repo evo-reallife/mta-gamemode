@@ -44,10 +44,9 @@ function MapEditorHelpGUI:constructor()
 
     GUIGridLabel:new(1, 22, 1, 1, FontAwesomeSymbols.Edit, self.m_Scrollable):setFont(FontAwesome(30))
 	GUIGridLabel:new(2, 22, 18, 1, "An edit icon for selecting the map and creating new maps", self.m_Scrollable):setHeader("sub")
-	GUIGridLabel:new(1, 23, 19, 7, [[    The list on the left-hand side shows the created maps and their current status. 
-    
-	The list on the right-hand side shows the objects that are assigned to the map. If you are unable to click 
-	on an object 
+	GUIGridLabel:new(1, 23, 19, 7, [[    
+	The list on the left-hand side shows the created maps and their current status. 
+    The list on the right-hand side shows the objects that are assigned to the map. If you are unable to click on an object 
     cannot click on an object due to a missing collision, you can search, select and edit the object here. 
     edit it. The object is also indicated here by a coordinate cross, a bounding box and a marker on the map. 
     marker on the map. Removed standard objects can also be restored here. 

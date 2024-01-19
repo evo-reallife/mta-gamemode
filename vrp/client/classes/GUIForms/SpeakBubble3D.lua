@@ -64,11 +64,11 @@ function SpeakBubble3D:onStreamIn(surface)
 	if self.m_LongText then
 		self.m_BG = GUIImage:new(0, 0, 200, 95, "files/images/Other/bubble_bg2X.png", surface):setColor(self.m_BackgroundColor)
 		self.m_Border = GUIImage:new(0, 0, 200, 95, "files/images/Other/bubble_border2X.png", surface):setColor(self.m_BorderColor)
-		print("big")
+		-- print("big")
 	else
 		self.m_BG = GUIImage:new(0, 0, 200, 70, "files/images/Other/bubble_bg.png", surface):setColor(self.m_BackgroundColor)
 		self.m_Border = GUIImage:new(0, 0, 200, 70, "files/images/Other/bubble_border.png", surface):setColor(self.m_BorderColor)
-		print("small")	
+		-- print("small")	
 	end
 	self.m_TextLabel = GUILabel:new(8, 2, 200, 25, self.m_Text, surface):setColor(self.m_TextColor)
 	self.m_DescriptionLabel = GUILabel:new(8, 27, 200, 20, self.m_Description, surface):setColor(self.m_DescriptionColor)
