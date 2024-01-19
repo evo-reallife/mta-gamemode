@@ -24,7 +24,7 @@ function MapEditorHelpGUI:constructor()
 	The intention behind the programming of the map editor is to enable events such as construction sites, accidents, roadblocks and further extensions of actions etc. on the map in real time and to give the administration team a certain freedom over the structure of the map.
 	
 	Since changing the map, whether during runtime or not, always has an enormous influence on the gameplay, the map editor should always be used with caution and care. 
-	It is better to think twice or talk to other team members before creating something that may cause an unforeseen intervention in the game]]., self.m_Scrollable)
+	It is better to think twice or talk to other team members before creating something that may cause an unforeseen intervention in the game.]], self.m_Scrollable)
     
 
     GUIGridLabel:new(1, 12, 19, 1, "Start with the folder", self.m_Scrollable):setHeader()
@@ -45,7 +45,9 @@ function MapEditorHelpGUI:constructor()
     GUIGridLabel:new(1, 22, 1, 1, FontAwesomeSymbols.Edit, self.m_Scrollable):setFont(FontAwesome(30))
 	GUIGridLabel:new(2, 22, 18, 1, "An edit icon for selecting the map and creating new maps", self.m_Scrollable):setHeader("sub")
 	GUIGridLabel:new(1, 23, 19, 7, [[    The list on the left-hand side shows the created maps and their current status. 
-    The list on the right-hand side shows the objects that are assigned to the map. If you are unable to click on an object 
+    
+	The list on the right-hand side shows the objects that are assigned to the map. If you are unable to click 
+	on an object 
     cannot click on an object due to a missing collision, you can search, select and edit the object here. 
     edit it. The object is also indicated here by a coordinate cross, a bounding box and a marker on the map. 
     marker on the map. Removed standard objects can also be restored here. 

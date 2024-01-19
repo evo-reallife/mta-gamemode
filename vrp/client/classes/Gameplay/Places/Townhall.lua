@@ -148,7 +148,7 @@ function Townhall:constructor()
 	local itemSpawnerPed8 = Ped.create(1, Vector3(-1096.38, -1614.74, 76.37))
 	itemSpawnerPed8:setRotation(Vector3(0, 0, 270))
 	itemSpawnerPed8.Name = _"Illegal weed transportation"
-	itemSpawnerPed8.Description = _"This is where the drug truck starts!"
+	itemSpawnerPed8.Description = _"This is where the weed truck\nstarts!"
 	itemSpawnerPed8.Func = function() end
 	self.m_Peds[#self.m_Peds + 1] = itemSpawnerPed8
 

@@ -1746,6 +1746,8 @@
 	<vrpfile src="files/images/Other/Neon.png"/>
 	<vrpfile src="files/images/Other/bubble_border.png"/>
 	<vrpfile src="files/images/Other/bubble_bg.png"/>
+	<vrpfile src="files/images/Other/bubble_bg2X.png"/>
+	<vrpfile src="files/images/Other/bubble_border2X.png"/>
 	<vrpfile src="files/images/Other/premium.png"/>
 	<vrpfile src="files/images/Other/TreasureRadar.png"/>
 	<vrpfile src="files/images/Other/TreasureRadarBlip.png"/>
