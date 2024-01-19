@@ -104,7 +104,7 @@ function JewelryStoreRobberyManager:constructor()
 	self.m_ShopPed:setFrozen(true)
     self.m_ShopPed.onTargetted = bind(self.Event_PedTargetted, self)
 
-	self.m_MinJewelryRobberyStateMembers = 3
+	self.m_MinJewelryRobberyStateMembers = 2
 
 	self.m_Players = {}
 	setmetatable(self.m_Players, { __mode = "v" })
@@ -319,12 +319,12 @@ function JewelryStoreRobberyManager:Event_PedTargetted(ped, attacker)
 			end
 
 			if not PermissionsManager:getSingleton():isPlayerAllowedToStart(attacker, "faction", "JewelryStoreRobbery") then
-				attacker:sendError(_("Du bist nicht berechtigt einen Juwelierraub zu starten!", attacker))
+				attacker:sendError(_("You are not authorised to rob a jeweller!", attacker))
 				return false
 			end
 
 			if FactionState:getSingleton():countPlayers() < self.m_MinJewelryRobberyStateMembers and not DEBUG then
-				attacker:sendError(_("Es müssen mindestens %d Staatsfraktionisten online sein!", attacker, self.m_MinJewelryRobberyStateMembers))
+				attacker:sendError(_("There must be at least %d state factionists online!", attacker, self.m_MinJewelryRobberyStateMembers))
 				return false
 			end
 
@@ -332,14 +332,14 @@ function JewelryStoreRobberyManager:Event_PedTargetted(ped, attacker)
 
 			for key, player in pairs(self.m_Players) do
 				if player and isElement(player) then
-					outputChatBox(_("Geschäftsbesitzer sagt: Bitte tun sie mir nichts!", player), player, 255, 255, 255)
+					outputChatBox(_("Shop owner says: Please don't hurt me!", player), player, 255, 255, 255)
 				end
 			end
 		else
-			attacker:sendError(_("Nur Mitglieder im Fraktionsdienst können die Juwelier ausrauben!", attacker))
+			attacker:sendError(_("You Should be On Duty evil faction to do jewellers rob!", attacker))
 		end
 	else
-		attacker:sendError(_("Nur Mitglieder einer bösen Fraktion können die Juwelier ausrauben!", attacker))
+		attacker:sendError(_("Only Members of an evil faction can rob the jewellers!", attacker))
 	end
 end
 
@@ -365,10 +365,10 @@ function JewelryStoreRobberyManager:stopRobbery(state)
 	self.m_ShopPed:setAnimation()
 
 	if state == "timeup" then
-		PlayerManager:getSingleton():breakingNews("Die Täter konnten die Beute nicht rechtzeitig abgeben!")
+		PlayerManager:getSingleton():breakingNews("The Perpetrators were unable to deliver the loot in time!")
 	elseif state == "state" then
-		PlayerManager:getSingleton():breakingNews("Der Raub wurde erfolgreich vereitelt! Die Beute konnte sichergestellt werden!")
+		PlayerManager:getSingleton():breakingNews("The Robbery was successfully foiled! The loot was recovered!")
 	else
-		PlayerManager:getSingleton():breakingNews("Der Raub wurde abgeschlossen! Die Täter sind mit der Beute entkommen!")
+		PlayerManager:getSingleton():breakingNews("The Robbery has been completed! The perpetrators have escaped with the loot!")
 	end
 end

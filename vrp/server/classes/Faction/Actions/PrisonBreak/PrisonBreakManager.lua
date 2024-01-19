@@ -60,14 +60,14 @@ function PrisonBreakManager:createDummyPoliceman()
     self.m_Officer:setInterior(2)
     self.m_Officer:setImmortal(true)
     self.m_Officer:setFrozen(true)
-    self.m_Officer.m_Warning = "Du überfällst den Gefängnisaufseher in 5 Sekunden, wenn du weiter auf ihn zielst!"
+    self.m_Officer.m_Warning = "You'll overrun the prison warden in 5 seconds if you keep aiming at him!"
     self.m_Officer.onTargetted = bind(self.PedTargetted, self)
     self.m_Officer.onTargetRefresh = bind(self.PedTargetRefresh, self)
 end
 
 function PrisonBreakManager:PedTargetted(ped, attacker)
     if not self:getCurrent() then
-        attacker:sendError(_("Derzeit läuft kein Knastausbruch!", attacker))
+        attacker:sendError(_("There is currently no jailbreak!", attacker))
         return false
     end
 end
@@ -81,17 +81,17 @@ end
 
 function PrisonBreakManager:BombArea_Place(bombArea, player)
 	if not player:getFaction() or not player:getFaction():isEvilFaction() then
-		player:sendError(_("Du kannst nur als Mitglied einer bösen Fraktion in das Gefängnis einbrechen!", player))
+		player:sendError(_("You Can only break into the prison as a member of an evil faction!", player))
 		return false
     end
     
 	if not PermissionsManager:getSingleton():isPlayerAllowedToStart(player, "faction", "PrisonBreak") then
-		player:sendError(_("Du bist nicht berechtigt einen Knastausbruch zu starten!", player))
+		player:sendError(_("You're not authorised to start a jailbreak!", player))
 		return false
 	end
 
 	if FactionState:getSingleton():countPlayers() < PrisonBreakManager.OfficerCount then
-		player:sendError(_("Es sind nicht genügend Staatsfraktionisten online!", player))
+		player:sendError(_("There aren't enough state factionists online!", player))
 		return false
 	end
 
@@ -100,7 +100,7 @@ function PrisonBreakManager:BombArea_Place(bombArea, player)
 	ActionsCheck:getSingleton():setAction("Knastausbruch")
 
 	for k, player in pairs(getElementsWithinColShape(self.m_BombColShape, "player")) do
-		player:triggerEvent("Countdown", PrisonBreakManager.BombCountdown/1000, "Bombe zündet")
+		player:triggerEvent("Countdown", PrisonBreakManager.BombCountdown/1000, "Bomb Ignites")
 	end
 	return true
 end

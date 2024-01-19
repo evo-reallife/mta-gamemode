@@ -68,7 +68,7 @@ function ExplosiveTruck:dragBox(button, state, player)
 	end
 
 	if getDistanceBetweenPoints3D(player:getPosition(), source:getPosition()) > 3 then
-		player:sendError(_("Du bist zu weit von der Kiste entfernt!", player))
+		player:sendError(_("You're too far away from the box!", player))
 
 		return
 	end
@@ -79,7 +79,7 @@ function ExplosiveTruck:dragBox(button, state, player)
 		not faction
 		or not faction:isStateFaction() and not faction:isEvilFaction()
 	then
-		player:sendError(_("Du kannst diese Kiste nicht aufheben!", player))
+		player:sendError(_("You can't pick up this box!", player))
 
 		return
 	end
@@ -114,7 +114,7 @@ function ExplosiveTruck:deliverBox(button, state, player)
 	self:removeBox(player)
 
 	faction:getDepot():addItem(player, ExplosiveTruck.Item, ExplosiveTruck.ItemAmount, true)
-	faction:sendSuccess("Es ist Sprengstoff ins Depot eingelagert worden!")
+	faction:sendSuccess("Explosives have been placed in the depot!")
 
 	delete(self)
 end
@@ -125,9 +125,7 @@ function ExplosiveTruck:impoundBox(player)
 	end
 
 	self:removeBox(player)
-
-	FactionState:getSingleton():sendShortMessage(player:getName() .. " hat Sprengstoff konfisziert!")
-
+	FactionState:getSingleton():sendShortMessage(player:getName() .. " Has confiscated explosives!")
 	delete(self)
 end
 

@@ -67,7 +67,7 @@ function PrisonBreak:PedTargetRefresh(count, startingPlayer)
 	
 	for attacker in pairs(attackers) do
 		if self.m_OfficerCountdown < PrisonBreak.OfficerCountdown then
-			attacker:sendShortMessage("Bedrohung zu " .. math.round((self.m_OfficerCountdown / PrisonBreak.OfficerCountdown) * 100, 1) .. " % abgeschlossen.")
+			attacker:sendShortMessage("Threat reduced to " .. math.round((self.m_OfficerCountdown / PrisonBreak.OfficerCountdown) * 100, 1) .. "%.")
 		end
 	end
 
@@ -82,7 +82,7 @@ function PrisonBreak:PedTargetRefresh(count, startingPlayer)
 				if isElement(attacker) and not table.find(self.m_KeycardPlayers, attacker) then
 					attacker:triggerEvent("Countdown", math.floor( getTimerDetails (self.m_KeycardDeactivateTimer) / 1000), "Keycards")
 					attacker:getInventory():giveItem("Keycard", 1)
-					attacker:sendSuccess("Du hast eine Keycard erhalten!")
+					attacker:sendSuccess("You have received a keycard!")
 					table.insert(self.m_KeycardPlayers, attacker)
 				end
 			end
@@ -102,14 +102,14 @@ function PrisonBreak:setKeycardTimeout()
 end
 
 function PrisonBreak:start()
-	PlayerManager:getSingleton():breakingNews("Das Gefängnis meldet höchste Sicherheitswarnung. Gefahrenlage unbekannt!")
-	Discord:getSingleton():outputBreakingNews("Das Gefängnis meldet höchste Sicherheitswarnung. Gefahrenlage unbekannt!")
-	FactionState:getSingleton():sendWarning("Das Gefängnis meldet höchste Sicherheitswarnung mit Bitte um Unterstützung!", "Neuer Einsatz", true, {-542.90, -515.07, 55.79})
+	PlayerManager:getSingleton():breakingNews("The Prison has issued a maximum security alert. Danger situation unknown!")
+	Discord:getSingleton():outputBreakingNews("The Prison has issued a maximum security alert. Danger situation unknown!")
+	FactionState:getSingleton():sendWarning("The Prison issues a maximum security alert with a request for Assistance!", "New Application", true, {-542.90, -515.07, 55.79})
 
 	self.m_Entrance:destroy()
 
 	for key, player in pairs(self.m_Faction:getOnlinePlayers()) do
-		player:triggerEvent("Countdown", math.floor(PrisonBreak.DoorsCountdown / 1000), "Ausbruch")
+		player:triggerEvent("Countdown", math.floor(PrisonBreak.DoorsCountdown / 1000), "Breakout")
 	end
 
 	setTimer(function ()
@@ -127,7 +127,7 @@ function PrisonBreak:getWeaponsFromBox(button, state, player)
 	end
 
 	if self.m_WeaponBoxPlayers[player:getId()] then
-		player:sendError(_("Du hast bereits Waffen aus dem Lager erhalten!", player));
+		player:sendError(_("You have already received weapons from the warehouse!", player));
 		return
 	end
 
@@ -135,12 +135,12 @@ function PrisonBreak:getWeaponsFromBox(button, state, player)
 	player:giveWeapon(31, 250);
 
 	self.m_WeaponBoxPlayers[player:getId()] = true
-	player:sendSuccess("Du hast Waffen aus dem Lager erhalten!");
+	player:sendSuccess("You've received weapons from the warehouse!");
 end
 
 function PrisonBreak:finish()
-	PlayerManager:getSingleton():breakingNews("Das Gefängnis meldet verminderte Sicherheitswarnung. Alle Tore sind wieder geschlossen!")
-	Discord:getSingleton():outputBreakingNews("Das Gefängnis meldet verminderte Sicherheitswarnung. Alle Tore sind wieder geschlossen!")
+	PlayerManager:getSingleton():breakingNews("The Prison reports a reduced security alert. All gates are closed again!")
+	Discord:getSingleton():outputBreakingNews("The Prison reports a reduced security alert. All gates are closed again!")
 
 	ActionsCheck:getSingleton():endAction()
 
@@ -151,7 +151,7 @@ function PrisonBreak:removeKeycardFromPlayer(player)
 	if player and isElement(player) and player:getInventory() then
 		if player:getInventory():getItemAmount("Keycard") and player:getInventory():getItemAmount("Keycard") > 0 then
 			player:getInventory():removeAllItem("Keycard")
-			player:sendError(_("Deine Keycard wurde deaktiviert und aus deinem Inventar entfernt!", player))
+			player:sendError(_("Your keycard has been deactivated and removed from your inventory!", player))
 		end
 	end
 end

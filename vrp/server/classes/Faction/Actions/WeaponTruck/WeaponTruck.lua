@@ -85,7 +85,7 @@ function WeaponTruck:constructor(driver, boxContent, totalAmount, type)
 			if self.m_StartFaction == faction or self.m_StartFaction:getDiplomacy(faction) == FACTION_DIPLOMACY["im Krieg"] then
 				dest = self:addDestinationMarker(faction, "evil")
 				self.m_DestinationBlips[faction:getId()] = Blip:new("Marker.png", dest.x, dest.y, {factionType = "State", faction = EvilBlipVisible, duty = true}, 9999, BLIP_COLOR_CONSTANTS.Red)
-				self.m_DestinationBlips[faction:getId()]:setDisplayText("Waffentruck-Abgabepunkt")
+				self.m_DestinationBlips[faction:getId()]:setDisplayText("Gun Truck Drop-off Point")
 				self.m_DestinationBlips[faction:getId()]:setZ(dest.z)
 			end
 		end
@@ -95,14 +95,14 @@ function WeaponTruck:constructor(driver, boxContent, totalAmount, type)
 		for i, faction in pairs(FactionEvil:getSingleton():getFactions()) do
 			dest = self:addDestinationMarker(faction, "evil")
 			self.m_DestinationBlips[faction:getId()] = Blip:new("Marker.png", dest.x, dest.y, {factionType = "State", faction = faction:getId(), duty = true}, 9999, BLIP_COLOR_CONSTANTS.Red)
-			self.m_DestinationBlips[faction:getId()]:setDisplayText("Waffentruck-Abgabepunkt")
+			self.m_DestinationBlips[faction:getId()]:setDisplayText("Gun Truck Drop-off Point")
 			self.m_DestinationBlips[faction:getId()]:setZ(dest.z)
 		end
 	end
 
 	dest = self:addDestinationMarker(self.m_Type == "state" and self.m_StartFaction or FactionManager:getSingleton():getFromId(3), "state") -- State
 	self.m_DestinationBlips["state"] = Blip:new("Marker.png", dest.x, dest.y, {factionType = {"State", "Evil", duty = true}}, 9999, BLIP_COLOR_CONSTANTS.Red)
-	self.m_DestinationBlips["state"]:setDisplayText("Waffentruck-Abgabe (Staat)")
+	self.m_DestinationBlips["state"]:setDisplayText("Weapons-Truck Tax (state)")
 	self.m_DestinationBlips["state"]:setZ(dest.z)
 
 
@@ -177,8 +177,8 @@ end
 
 
 function WeaponTruck:timeUp()
-	PlayerManager:getSingleton():breakingNews("Der %s ist fehlgeschlagen! (Zeit abgelaufen)", WEAPONTRUCK_NAME[self.m_Type])
-	Discord:getSingleton():outputBreakingNews(string.format("Der %s ist fehlgeschlagen! (Zeit abgelaufen)", WEAPONTRUCK_NAME[self.m_Type]))
+	PlayerManager:getSingleton():breakingNews("The %s has failed! (Time Expired)", WEAPONTRUCK_NAME[self.m_Type])
+	Discord:getSingleton():outputBreakingNews(string.format("The %s has failed! (Time Expired)", WEAPONTRUCK_NAME[self.m_Type]))
 
 	delete(self)
 end
@@ -200,7 +200,7 @@ function WeaponTruck:Event_onLoadMarkerHit(hitElement, matchingDimension)
 				hitElement:detachPlayerObject(box)
 				self:loadBoxOnWeaponTruck(hitElement,box)
 			else
-				hitElement:sendError(_("Du hast keine Kiste dabei!",hitElement))
+				hitElement:sendError(_("You haven't brought a box!",hitElement))
 			end
 		end
 	end
@@ -251,10 +251,10 @@ function WeaponTruck:Event_onBoxClick(button, state, player)
 				player:setAnimation("carry", "crry_prtial", 1, true, true, false, true)
 				player:attachPlayerObject(source)
 			else
-				player:sendError(_("Du bist zu weit von der Kiste entfernt!", player))
+				player:sendError(_("You're too far from the box!", player))
 			end
 		else
-			player:sendError(_("Nur Fraktionisten können Kisten aufheben!",player))
+			player:sendError(_("Only factionists can pick up boxes!",player))
 		end
 	end
 end
@@ -268,12 +268,12 @@ function WeaponTruck:loadBoxOnWeaponTruck(player,box)
 	removeEventHandler("onElementClicked", box, self.m_Event_onBoxClickFunc)
 
 	if boxesOnTruck >= self.m_BoxesCount then
-		player:sendInfo(_("Alle Kisten aufgeladen! Der Truck ist bereit!",player))
+		player:sendInfo(_("All boxes loaded! The truck is ready!",player))
 		self.m_Truck:setFrozen(false)
 		self.m_Truck:setLocked(false)
 		if isElement(self.m_LoadMarker) then self.m_LoadMarker:destroy() end
 	else
-		player:sendInfo(_("%d/%d Kisten aufgeladen!", player, boxesOnTruck, self.m_BoxesCount))
+		player:sendInfo(_("%d/%d Boxes loaded!", player, boxesOnTruck, self.m_BoxesCount))
 	end
 end
 
@@ -313,9 +313,9 @@ function WeaponTruck:outputBoxContent(player, box)
 			for typ,amount in pairs(weaponTable[weaponID]) do
 				if amount > 0 then
 					if typ == "Waffe" then
-						outputChatBox(_("Kiste: %s: %s %s Waffe/n", player, box.id, amount, WEAPON_NAMES[weaponID]),player,255,255,0)
+						outputChatBox(_("Box: %s: %s %s Weapon/s", player, box.id, amount, WEAPON_NAMES[weaponID]),player,255,255,0)
 					elseif typ == "Munition" then
-						outputChatBox(_("Kiste: %s: %s %s Magazin/e", player, box.id, amount, WEAPON_NAMES[weaponID]),player,255,255,0)
+						outputChatBox(_("Box: %s: %s %s Magazine/s", player, box.id, amount, WEAPON_NAMES[weaponID]),player,255,255,0)
 					end
 				end
 			end
@@ -328,7 +328,7 @@ end
 --Vehicle Events
 function WeaponTruck:Event_OnWeaponTruckStartEnter(player,seat)
 	if seat == 0 and not player:getFaction() then
-		player:sendError(_("Den Waffentruck können nur Fraktionisten fahren!",player))
+		player:sendError(_("Only factionists can drive the weapons truck!",player))
 		cancelEvent()
 	end
 end
@@ -337,8 +337,8 @@ function WeaponTruck:Event_OnWeaponTruckDestroy()
 	if self and not self.m_Destroyed then
 		self.m_Destroyed = true
 		self:Event_OnWeaponTruckExit(self.m_Driver,0)
-		PlayerManager:getSingleton():breakingNews("Der %s wurde zerstört!", WEAPONTRUCK_NAME[self.m_Type])
-		Discord:getSingleton():outputBreakingNews(string.format("Der %s wurde zerstört!", WEAPONTRUCK_NAME[self.m_Type]))
+		PlayerManager:getSingleton():breakingNews("The %s has been destroyed!", WEAPONTRUCK_NAME[self.m_Type])
+		Discord:getSingleton():outputBreakingNews(string.format("The %s has been destroyed!", WEAPONTRUCK_NAME[self.m_Type]))
 		self:delete()
 	end
 end
@@ -387,22 +387,22 @@ function WeaponTruck:Event_DeloadBox(veh)
 								return
 							end
 						end
-						client:sendError(_("Es befindet sich keine Kiste auf dem Truck!",client))
+						client:sendError(_("There is no crate on the truck!",client))
 						return
 					else
-						client:sendError(_("Du darfst in keinem Fahrzeug sitzen!",client))
+						client:sendError(_("You are not allowed to sit in any vehicle!",client))
 					end
 				else
-					client:sendError(_("Du hast bereits ein Objekt dabei!",client))
+					client:sendError(_("You already have an object!",client))
 				end
 			else
-				client:sendError(_("Du bist zu weit vom Truck entfernt!",client))
+				client:sendError(_("You are too far away from the truck!",client))
 			end
 		else
-			client:sendError(_("Dieses Fahrzeug kann nicht entladen werden!",client))
+			client:sendError(_("This vehicle can't be unloaded!",client))
 		end
 	else
-		client:sendError(_("Nur Fraktionisten können Kisten abladen!",client))
+		client:sendError(_("Only factionists can unload boxes!",client))
 	end
 end
 
@@ -412,7 +412,7 @@ function WeaponTruck:isWeaponTruckInWater()
 			self:forceBoxesToDrop()
 			self.m_WaterNotificationTimer = setTimer(
 				function()
-					PlayerManager:getSingleton():breakingNews("Neueste Quellen berichten, dass der Waffentruck einen Unfall hatte und ins Wasser gefahren ist!")
+					PlayerManager:getSingleton():breakingNews("Latest sources report that the gun truck had an accident and drove into the water!")
 				end
 			, 180000, 1)
 			self.m_IsSubmerged = true
@@ -462,22 +462,22 @@ function WeaponTruck:Event_LoadBox(veh)
 							box:attach(veh, VEHICLE_BOX_LOAD[veh.model][count+1])
 							removeEventHandler("onElementClicked", box, self.m_Event_onBoxClickFunc)
 						else
-							client:sendError(_("Du hast keine Kiste dabei!",client))
+							client:sendError(_("You haven't brought a box!",client))
 						end
 					else
-						client:sendError(_("Das Fahrzeug ist bereits voll beladen!",client))
+						client:sendError(_("The vehicle is already fully laden!",client))
 					end
 				else
-					client:sendError(_("Du darfst in keinem Fahrzeug sitzen!",client))
+					client:sendError(_("You are not allowed to sit in any vehicle!",client))
 				end
 			else
-				client:sendError(_("Du bist zu weit vom Truck entfernt!",client))
+				client:sendError(_("You are too far away from the truck!",client))
 			end
 		else
-			client:sendError(_("Dieses Fahrzeug kann nicht beladen werden!",client))
+			client:sendError(_("This vehicle can't be loaded!",client))
 		end
 	else
-		client:sendError(_("Nur Fraktionisten können Kisten abladen!",client))
+		client:sendError(_("Only factionists can unload boxes!",client))
 	end
 end
 
@@ -492,7 +492,7 @@ function WeaponTruck:Event_onDestinationMarkerHit(hitElement, matchingDimension)
 					elseif faction:isStateFaction() and source.type == "state" then
 						self:onDestinationMarkerHit(hitElement)
 					else
-						hitElement:sendError(_("Du kannst hier nicht abgeben!",hitElement))
+						hitElement:sendError(_("You can't hand in here!",hitElement))
 					end
 				end
 			end
@@ -504,21 +504,21 @@ function WeaponTruck:onDestinationMarkerHit(hitElement)
 	local faction = source.faction
 	local box
 	if isPedInVehicle(hitElement) and getPedOccupiedVehicle(hitElement) == self.m_Truck then
-		hitElement:sendInfo(_("Bitte steig aus um die Kisten zu entladen!", hitElement))
+		hitElement:sendInfo(_("Please get off to unload the boxes!", hitElement))
 		return
 	end
 	
 	if hitElement:getPlayerAttachedObject() then
 		if self:getAttachedBoxes(hitElement) > 0 then
 			box = hitElement:getPlayerAttachedObject()
-			PlayerManager:getSingleton():breakingNews("Waffenkiste %d von %d wurde bei der/den %s abgegeben!", self.m_BoxesCount-self:getRemainingBoxAmount()+1, self.m_BoxesCount, faction:getShortName())
-			hitElement:sendInfo(_("Du hast erfolgreich eine Kiste abgegeben! Die Waffen sind nun im Fraktions-Depot!",hitElement))
+			PlayerManager:getSingleton():breakingNews("Weapons box %d from %d was handed in to %s!", self.m_BoxesCount-self:getRemainingBoxAmount()+1, self.m_BoxesCount, faction:getShortName())
+			hitElement:sendInfo(_("You have successfully handed in a crate! The weapons are now in the faction depot!",hitElement))
 			self:addWeaponsToDepot(hitElement, faction, box.content)
 			hitElement:detachPlayerObject(box)
 			box:destroy()
 		end
 	elseif hitElement:getOccupiedVehicle() then
-		hitElement:sendInfo(_("Du musst die Kisten per Hand abladen!", hitElement))
+		hitElement:sendInfo(_("You have to unload the boxes by hand!", hitElement))
 		return
 	end
 
@@ -577,7 +577,7 @@ function WeaponTruck:addWeaponsToDepot(player, faction, weaponTable)
 						end
 						depot:addMagazineD(weaponID,insertAmount)
 						weaponTable[weaponID]["Munition"] = weaponTable[weaponID]["Munition"] - insertAmount
-						shortMessage[#shortMessage+1] = {WEAPON_NAMES[weaponID].." Magazin/e", insertAmount}
+						shortMessage[#shortMessage+1] = {WEAPON_NAMES[weaponID].." Magazine/s", insertAmount}
 					end
 				end
 			end
@@ -596,7 +596,7 @@ function WeaponTruck:addWeaponsToDepot(player, faction, weaponTable)
 						evidenceString[#evidenceString+1] = amount.." "..WEAPON_NAMES[weaponID].."\n"
 					elseif typ == "Munition" then
 						StateEvidence:getSingleton():addMunitionToEvidence(player, weaponID, amount, true)
-						evidenceString[#evidenceString+1] = amount.." "..WEAPON_NAMES[weaponID].."-Magazine\n"
+						evidenceString[#evidenceString+1] = amount.." "..WEAPON_NAMES[weaponID].."-Magazines\n"
 					end
 				else
 					if typ == "Waffe" then
@@ -609,22 +609,24 @@ function WeaponTruck:addWeaponsToDepot(player, faction, weaponTable)
 		end
 	end
 	if money > 0 then
-		self.m_BankAccountServer:transferMoney(faction, money, "Waffentruck Kisten", "Action", "WeaponTruck")
+		self.m_BankAccountServer:transferMoney(faction, money, "Weapon-Truck Boxs", "Action", "WeaponTruck")
 	end
 
-	local shortmessageString = "Ins Depot gelegt:"
+	local shortmessageString = "Placed in the depot:"
 	for index, data in pairs(shortMessage) do
 		shortmessageString = shortmessageString.."\n"..table.concat(data, ": ")
 	end
+
+	-- "AviRex Dev" Don't Know what is that exactly but okay its no problem
 	if evidenceString and table.size(evidenceString) > 0 then
-		shortmessageString = shortmessageString.."In die Asservatenkammer gelegt:"
+		shortmessageString = shortmessageString.."Placed in the evidence room:"
 		shortmessageString = shortmessageString.."\n"..table.concat(evidenceString)
 	end
 
 	if money > 0 then
 		shortmessageString = shortmessageString..("Geld: %d$"):format(money)
 	end
-	player:sendShortMessage(shortmessageString, "Waffentruck-Kiste", nil, 15000)
+	player:sendShortMessage(shortmessageString, "Weapon-Truck Box", nil, 15000)
 
 	depot:save()
 end

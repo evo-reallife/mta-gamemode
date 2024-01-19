@@ -57,7 +57,7 @@ function StateEvidenceTruck:constructor(driver, money)
 	local dest = StateEvidenceTruck.Destination
 
 	self.m_DestinationBlips["State"] = Blip:new("Marker.png", dest.x, dest.y, {factionType = "State", duty = true}, 9999, BLIP_COLOR_CONSTANTS.Red)
-	self.m_DestinationBlips["State"]:setDisplayText("Geldtruck-Abgabepunkt")
+	self.m_DestinationBlips["State"]:setDisplayText("Money-Truck drop-off Point")
 
 	for i, faction in pairs(FactionEvil:getSingleton():getFactions()) do
 		self:addDestinationMarker(faction:getId(), "evil", false)
@@ -71,7 +71,7 @@ end
 function StateEvidenceTruck:destructor()
 	removeEventHandler("onElementDestroy",self.m_Truck, self.m_DestroyFunc)
 	ActionsCheck:getSingleton():endAction()
-	StatisticsLogger:getSingleton():addActionLog("Geld-Transport", "stop", self.m_StartPlayer, self.m_StartFaction, "faction")
+	StatisticsLogger:getSingleton():addActionLog("Money-Transport", "stop", self.m_StartPlayer, self.m_StartFaction, "faction")
 	self.m_Truck:destroy()
 
 	if isTimer(self.m_Timer) then self.m_Timer:destroy() end
@@ -100,7 +100,7 @@ function StateEvidenceTruck:destructor()
 end
 
 function StateEvidenceTruck:timeUp()
-	PlayerManager:getSingleton():breakingNews("Der Geldtransport ist fehlgeschlagen! (Zeit abgelaufen)")
+	PlayerManager:getSingleton():breakingNews("The Money Transfer has failed! (Time Expired)")
 	delete(self)
 end
 
@@ -151,10 +151,10 @@ function StateEvidenceTruck:Event_onBagClick(button, state, player)
 			if player:getFaction() and ((player:getFaction():isStateFaction() and player:isFactionDuty()) or player:getFaction():isEvilFaction()) then
 				player:attachPlayerObject(source)
 			else
-				player:sendError(_("Nur Fraktionisten können den Geldsack aufheben!", player))
+				player:sendError(_("Only faction can pick up the money bag!", player))
 			end
 		else
-			player:sendError(_("Du bist zu weit von dem Geldsack entfernt!", player))
+			player:sendError(_("You're too far from the money bag!", player))
 		end
 	end
 end
@@ -170,7 +170,7 @@ function StateEvidenceTruck:Event_onDestinationMarkerHit(hitElement, matchingDim
 					elseif faction:isStateFaction() and source.type == "state" then
 						self:onDestinationMarkerHit(hitElement)
 					else
-						hitElement:sendError(_("Du kannst hier nicht abgeben!",hitElement))
+						hitElement:sendError(_("You can't hand in here!",hitElement))
 					end
 				end
 			end
@@ -182,17 +182,17 @@ function StateEvidenceTruck:onDestinationMarkerHit(hitElement)
 	local faction = hitElement:getFaction()
 	local bag = false
 
-	if hitElement.vehicle then return hitElement:sendInfo(_("Du musst die Geldsäcke per Hand abgeben!", hitElement)) end
+	if hitElement.vehicle then return hitElement:sendInfo(_("You have to hand in the money bags!", hitElement)) end
 
 	if hitElement:getPlayerAttachedObject() and hitElement:getPlayerAttachedObject():getModel() == 1550 then
 			--bags = getAttachedElements(hitElement)
-			PlayerManager:getSingleton():breakingNews("%d von %d Geldsäcken wurden abgegeben!", self.m_BagAmount-self:getRemainingBagAmount()+1, self.m_BagAmount)
-			hitElement:sendInfo(_("Du hast erfolgreich einen Geldsack abgegeben!",hitElement))
+			PlayerManager:getSingleton():breakingNews("%d of %d money bags have been handed in!", self.m_BagAmount-self:getRemainingBagAmount()+1, self.m_BagAmount)
+			hitElement:sendInfo(_("You have successfully handed in a money bag!",hitElement))
 			bag = hitElement:getPlayerAttachedObject()
 			hitElement:detachPlayerObject(bag)
 	end
 
-	self.m_BankAccountServer:transferMoney(faction, bag.money, "Geldsack (Geldtransport)", "Action", "EvidenceTruck")
+	self.m_BankAccountServer:transferMoney(faction, bag.money, "Money bag (Money-Transport)", "Action", "EvidenceTruck")
 	bag:destroy()
 	if self:getRemainingBagAmount() == 0 then
 		delete(self)
@@ -201,7 +201,7 @@ end
 
 function StateEvidenceTruck:Event_OnTruckStartEnter(player,seat)
 	if seat == 0 and not player:getFaction() then
-		player:sendError(_("Den Geldtransporter können nur Fraktionisten fahren!",player))
+		player:sendError(_("Only faction can drive the Money-Transporter!",player))
 		cancelEvent()
 	end
 end
@@ -210,8 +210,8 @@ function StateEvidenceTruck:Event_OnTruckDestroy()
 	if self and not self.m_Destroyed then
 		self.m_Destroyed = true
 		self:Event_OnTruckExit(self.m_Driver,0)
-		PlayerManager:getSingleton():breakingNews("Der Geldtransporter wurde zerstört!")
-		Discord:getSingleton():outputBreakingNews("Der Geldtransporter wurde zerstört!")
+		PlayerManager:getSingleton():breakingNews("The Money-Transporter was destroyed!")
+		Discord:getSingleton():outputBreakingNews("The Money-Transporter was destroyed!")
 		delete(self)
 	end
 end
@@ -236,7 +236,7 @@ function StateEvidenceTruck:isStateEvidenceTruckInWater()
 		if isElementInWater(self.m_Truck) then
 			self.m_WaterNotificationTimer = setTimer(
 				function()
-					PlayerManager:getSingleton():breakingNews("Neueste Quellen berichten, dass der Geldtransporter einen Unfall hatte und ins Wasser gefahren ist!")
+					PlayerManager:getSingleton():breakingNews("The Latest Sources report that the money transporter had an accident and drove into the water!")
 				end
 			, 180000, 1)
 			self.m_IsSubmerged = true

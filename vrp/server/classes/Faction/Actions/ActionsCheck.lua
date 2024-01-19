@@ -19,10 +19,10 @@ function ActionsCheck:isActionAllowed(player)
 		if now.timestamp > next then
 			return true
 		else
-			player:sendError(_("Es wurde vor kurzem eine Aktion gestartet! Die Nächste Aktion ist erst um %s Uhr möglich!",player,getRealTime(next).hour..":"..getRealTime(next).minute))
+			player:sendError(_("A promotion was recently started! The next action is only possible at %s!",player,getRealTime(next).hour..":"..getRealTime(next).minute))
 		end
 	else
-		player:sendError(_("Es läuft derzeit ein %s! Es kann solange keine weitere Aktion gestartet werden!",player,self.m_CurrentAction))
+		player:sendError(_("A %s is currently running! No further action can be started until then!",player,self.m_CurrentAction))
 	end
 	return false
 end

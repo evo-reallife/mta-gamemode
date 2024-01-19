@@ -57,17 +57,17 @@ function MWeaponTruck:onStartPointHit(hitElement, matchingDimension)
 						self.m_CurrentType = source.type
 					end
 				else
-					hitElement:sendError(_("Du bist nicht berechtigt einen %sWaffentruck zu starten!", hitElement, source.type == "state" and "Staats-" or ""))
+					hitElement:sendError(_("You are not authorised to start a %sweapon truck!", hitElement, source.type == "state" and "Staats-" or ""))
 				end
 			else
 				if source.type == "evil" then
-					hitElement:sendError(_("Den Waffentruck können nur Mitglieder böser Fraktionen starten!",hitElement))
+					hitElement:sendError(_("Only members of evil factions can start the weapon truck!",hitElement))
 				elseif source.type == "state" then
-					hitElement:sendError(_("Den Staats-Waffentruck können nur Mitglieder von Staats-Fraktionen im Dienst starten!",hitElement))
+					hitElement:sendError(_("Only members of state factions on duty can start the state weapon truck!",hitElement))
 				end
 			end
 		else
-			hitElement:sendError(_("Den Waffentruck können nur Fraktions-Mitglieder starten!",hitElement))
+			hitElement:sendError(_("Only faction members can start the weapon truck!",hitElement))
 		end
 	end
 end
@@ -78,32 +78,32 @@ function MWeaponTruck:Event_onWeaponTruckLoad(boxContentTable)
 
 		if faction:isEvilFaction() then
 			if client:isFactionDuty() then
-				if FactionState:getSingleton():countPlayers() < WEAPONTRUCK_MIN_MEMBERS["evil"] and not DEBUG then
-					client:sendError(_("Es müssen mindestens 3 Staatsfraktionisten online sein!", client))
-					return
-				end
+				-- if FactionState:getSingleton():countPlayers() < WEAPONTRUCK_MIN_MEMBERS["evil"] and not DEBUG then
+				-- 	client:sendError(_("There must be at least 3 state faction members online!", clientو ))
+				-- 	return
+				-- end
 				self.m_CurrentType = "evil"
 			else
-				client:sendError(_("Du trägst nicht deine Fraktionsfarben!",client))
+				client:sendError(_("You're not On Duty",client))
 				return
 			end
 		elseif faction:isStateFaction() then
 			if client:isFactionDuty() then
-				if FactionEvil:getSingleton():countPlayers() < WEAPONTRUCK_MIN_MEMBERS["state"] and not DEBUG then
-					client:sendError(_("Es müssen mindestens 3 Spieler böser Fraktionen online sein!", client))
-					return
-				end
+				-- if FactionEvil:getSingleton():countPlayers() < WEAPONTRUCK_MIN_MEMBERS["state"] and not DEBUG then
+				-- 	client:sendError(_("There must be at least 3 players of evil factions online!", client))
+				-- 	return
+				-- end
 				self.m_CurrentType = "state"
 			else
-				client:sendError(_("Du bist nicht im Dienst!",client))
+				client:sendError(_("You're not on duty!",client))
 				return
 			end
 		else
-			client:sendError(_("Ungültige Fraktion!",client))
+			client:sendError(_("Invalid faction!",client))
 		end
 
 		if not PermissionsManager:getSingleton():isPlayerAllowedToStart(client, "faction", self.m_CurrentType == "evil" and "WeaponTruck" or "WeaponTruckState") then
-			client:sendError(_("Du bist nicht berechtigt einen %sWaffentruck zu starten!", client, self.m_CurrentType == "state" and "Staats-" or ""))
+			client:sendError(_("You are not authorised to start a %sweapon truck!", client, self.m_CurrentType == "state" and "Staats-" or ""))
 			return
 		end
 		
@@ -127,36 +127,36 @@ function MWeaponTruck:Event_onWeaponTruckLoad(boxContentTable)
 					if ActionsCheck:getSingleton():isActionAllowed(client) then
 
 						if self.m_CurrentType == "evil" then
-							faction:transferMoney(self.m_BankAccount, totalAmount, "Waffen-Truck", "Action", "WeaponTruck")
+							faction:transferMoney(self.m_BankAccount, totalAmount, "Weapons-Truck", "Action", "WeaponTruck")
 						elseif self.m_CurrentType == "state" then
 							if not client:isFactionDuty() then
 								client:sendError(_("Du bist nicht im Dienst!",client))
 								return
 							end
-							faction:transferMoney(self.m_BankAccount, totalAmount, "Waffen-Truck", "Action", "WeaponTruck")
+							faction:transferMoney(self.m_BankAccount, totalAmount, "Weapons-Truck", "Action", "WeaponTruck")
 						end
 						ActionsCheck:getSingleton():setAction(WEAPONTRUCK_NAME[self.m_CurrentType])
 						FactionState:getSingleton():sendMoveRequest(TSConnect.Channel.STATE)
 						if self.m_CurrentWT then delete(self.m_CurrentWT) end
-						client:sendInfo(_("Die Ladung steht bereit! Klicke die Kisten an und bringe sie zum Waffen-Truck! Gesamtkosten: %d$",client,totalAmount))
+						client:sendInfo(_("The Load is ready! Click on the crates and take them to the Weapons Truck! Total cost: %d$",client,totalAmount))
 						self.m_CurrentWT = WeaponTruck:new(client, boxContentTable, totalAmount, self.m_CurrentType)
-						PlayerManager:getSingleton():breakingNews("Ein %s wird beladen", WEAPONTRUCK_NAME[self.m_CurrentType])
-						Discord:getSingleton():outputBreakingNews(string.format("Ein %s wird beladen", WEAPONTRUCK_NAME[self.m_CurrentType]))
+						PlayerManager:getSingleton():breakingNews("A %s is loaded", WEAPONTRUCK_NAME[self.m_CurrentType])
+						Discord:getSingleton():outputBreakingNews(string.format("A %s is loaded", WEAPONTRUCK_NAME[self.m_CurrentType]))
 						if self.m_CurrentType == "evil" then
-							FactionState:getSingleton():sendWarning("Ein %s wird beladen", "Neuer Einsatz", true, WeaponTruck.spawnPos[self.m_CurrentType], WEAPONTRUCK_NAME[self.m_CurrentType])
+							FactionState:getSingleton():sendWarning("A %s is loaded", "New Application", true, WeaponTruck.spawnPos[self.m_CurrentType], WEAPONTRUCK_NAME[self.m_CurrentType])
 						else
-							FactionEvil:getSingleton():sendWarning("Ein %s wird beladen", "Neue Aktion", true, WeaponTruck.spawnPos[self.m_CurrentType], WEAPONTRUCK_NAME[self.m_CurrentType])
+							FactionEvil:getSingleton():sendWarning("A %s is loaded", "New Action", true, WeaponTruck.spawnPos[self.m_CurrentType], WEAPONTRUCK_NAME[self.m_CurrentType])
 						end
 						StatisticsLogger:getSingleton():addActionLog(WEAPONTRUCK_NAME[self.m_CurrentType], "start", client, client:getFaction(), "faction")
 					end
 				else
-					client:sendError(_("Du hast zuwenig augeladen! Mindestens: %d$",client,self.m_AmountPerBox))
+					client:sendError(_("You have not loaded enough! At least: %d$",client,self.m_AmountPerBox))
 				end
 			else
-				client:sendError(_("Ihr hast nicht ausreichend Geld in der Fraktions Kasse! (%d$)",client,totalAmount))
+				client:sendError(_("You don't have enough money in the faction vault! (%d$)",client,totalAmount))
 			end
 		else
-			client:sendError(_("Du bist in keiner Fraktion!",client))
+			client:sendError(_("You're not in any faction!",client))
 		end
 	end
 end

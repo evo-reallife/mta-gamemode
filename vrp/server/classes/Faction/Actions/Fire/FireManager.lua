@@ -20,11 +20,12 @@ function FireManager:constructor()
 	self.m_FireTimer = setTimer(self.m_FireUpdateBind, 1000 * 60 * math.random(FIRE_TIME_MIN, FIRE_TIME_MAX), 1)
 
 	self.m_RandomFireStrings = { -- blablabla [...]
-		"steht in Flammen",
-		"meldet einen Brand",
-		"ist in Flammen ausgebrochen",
-		"wurde wegen eines Rauchalarms geräumt",
+		"is on fire",
+		"reports a fire",
+		"has erupted in flames",
+		"was evacuated due to a smoke alarm",
 	}
+
 
 	self:loadFirePlaces()
 
@@ -100,15 +101,15 @@ function FireManager:onUpdateHandler(stats)
 				self:sendNews(self.m_Fires[self.m_CurrentFire.m_Id]["message"])
 
 				if activeRescue > 0 then
-					self:sendNews(("Es befinden sich bereits %d Rettungskräfte zur Brandbekämpfung vor Ort"):format(activeRescue))
+					self:sendNews(("There Are already %d rescue teams on site to fight the fire"):format(activeRescue))
 				else
-					self:sendNews("Zur Zeit sind noch keine Rettungskräfte eingetroffen")
+					self:sendNews("No Rescue services have arrived yet")
 				end
 				if acitveState > 0 then
 					if activeRescue > 0 then
-						self:sendNews(("Zusätzlich sperren %d Polizei-Streifen die umliegenden Straßen ab"):format(acitveState))
+						self:sendNews(("In Addition, %d police patrols cordon off the surrounding streets"):format(acitveState))
 					else
-						self:sendNews(("Dennoch hat die Polizei %d Streifen zur Absperrung stationiert"):format(acitveState))
+						self:sendNews(("Nevertheless, the police have stationed %d patrols to cordon off the area"):format(acitveState))
 					end
 				end
 			end
@@ -116,19 +117,19 @@ function FireManager:onUpdateHandler(stats)
 		if (getTickCount() - stats.startTime) > 1000*60*2 and math.random(0, 5) == 0 then
 			local size, lastSize = self.m_CurrentFire:getFireSpreadSize()
 			if size == lastSize then
-				self:sendNews(("Es brennen bereits %s m²"):format(size))
+				self:sendNews(("There are already %s m² burning"):format(size))
 			elseif size < lastSize then
 				if activeRescue == 0 then
-					self:sendNews(("Es sind nur noch %s m² mit Flammen bedeckt"):format(size))
+					self:sendNews(("Only %s m² are still covered with flames"):format(size))
 				else
-					self:sendNews(("Die Feuerwehr hat das Feuer eingedämmt, sodass nur noch %s m² brennen"):format(size))
+					self:sendNews(("The fire brigade has contained the fire so that only %s m² are still burning"):format(size))
 				end
 			else
-				self:sendNews(("Das Feuer breitet sich rasant aus, momentan erstreckt es sich bereits auf %s m²"):format(size))
+				self:sendNews(("The fire is spreading rapidly, currently it already covers %s m²"):format(size))
 			end
 		end
 	else
-		self:sendNews(("Das Feuer wurde gelöscht und die Verkehrsbehinderung aufgehoben"):format(activeRescue))
+		self:sendNews(("The fire was extinguished and the traffic obstruction was cancelled"):format(activeRescue))
 	end
 end
 
@@ -176,12 +177,12 @@ function FireManager:stopCurrentFire(stats)
 				table.insert(mostPoints, score)
 			end
 		end
-		self.m_BankAccountServer:transferMoney(FactionRescue:getSingleton().m_Faction, moneyForFaction * table.size(stats.pointsByPlayer), "Feuer gelöscht", "Event", "Fire")
+		self.m_BankAccountServer:transferMoney(FactionRescue:getSingleton().m_Faction, moneyForFaction * table.size(stats.pointsByPlayer), "Fire Extinguished", "Event", "Fire")
 
 		StatisticsLogger:getSingleton():addFireLog(self.m_CurrentFire.m_Id, math.floor(getTickCount()-stats.startTime)/1000, toJSON(playersByID), (table.size(stats.pointsByPlayer) > 0) and 1 or 0, moneyForFaction * table.size(stats.pointsByPlayer))
 		
 		table.sort(mostPoints, function(a, b) return a > b end)
-		local groupLogMessage = self.m_CurrentFire.m_Id == 1000 and ("hat brennende Absturztrümmer (%s Min.) gelöscht (+%s$).") or ("hat ein ausgebrochenes Feuer (%s Min.) gelöscht (+%s$).")
+		local groupLogMessage = self.m_CurrentFire.m_Id == 1000 and ("has extinguished burning crash debris (%s min.) (+%s$).") or ("has extinguished a fire that has broken out (%s min.) (+%s$).")
 		FactionRescue:getSingleton().m_Faction:addLog(table.find(playersByID, mostPoints[1]), "Brand", (groupLogMessage):format(math.floor((getTickCount()-stats.startTime)/1000/60), moneyForFaction))
 	else -- fire got deleted elsewhere (e.g. admin panel)
 		delete(self.m_CurrentFire)
@@ -206,7 +207,7 @@ end
 
 function FireManager:Event_adminRequestData()
 	if client:getRank() < ADMIN_RANK_PERMISSION["fireMenu"] then
-		client:sendError(_("Du darfst diese Funktion nicht nutzen!", client))
+		client:sendError(_("You are not authorised to use this function!", client))
 		return
 	end
 	self:sendAdminFireData(client)
@@ -218,7 +219,7 @@ end
 
 function FireManager:Event_toggleFire(id)
 	if client:getRank() < ADMIN_RANK_PERMISSION["toggleFire"] then
-		client:sendError(_("Du darfst diese Funktion nicht nutzen!", client))
+		client:sendError(_("You are not authorised to use this function!", client))
 		return
 	end
 	if self:getCurrentFire() then
@@ -235,7 +236,7 @@ end
 
 function FireManager:Event_createFire()
 	if client:getRank() < ADMIN_RANK_PERMISSION["editFire"] then
-		client:sendError(_("Du darfst diese Funktion nicht nutzen!", client))
+		client:sendError(_("You are not authorised to use this function!", client))
 		return
 	end
 
@@ -251,16 +252,16 @@ function FireManager:Event_createFire()
 				["enabled"] = false,
 			}
 
-		client:sendSuccess(_("Feuer mit der ID %d erstellt, du kannst es nun editieren.", client, sql:lastInsertId()))
+		client:sendSuccess(_("fire with the ID %d, you can now edit it.", client, sql:lastInsertId()))
 		self:sendAdminFireData(client)
 	else
-		client:sendError(_("Neues Feuer konnte nicht in die Datenbank eingefügt werden.", client))
+		client:sendError(_("New fire could not be added to the database.", client))
 	end
 end
 
 function FireManager:Event_editFire(id, tblArgs)
 	if client:getRank() < ADMIN_RANK_PERMISSION["editFire"] then
-		client:sendError(_("Du darfst diese Funktion nicht nutzen!", client))
+		client:sendError(_("You are not authorised to use this function!", client))
 		return
 	end
 	if tblArgs.generateMsg then
@@ -295,7 +296,7 @@ function FireManager:Event_editFire(id, tblArgs)
 		table.removevalue(self.m_EnabledFires, Id)
 	end
 
-	client:sendSuccess(_("Feuer %d gespeichert.", client, id))
+	client:sendSuccess(_("Fire %d saved.", client, id))
 	self:sendAdminFireData(client) -- resend data (update client UI)
 end
 
@@ -311,18 +312,18 @@ function FireManager:generateMessage(position, width, height)
 				zoneName,
 				self.m_RandomFireStrings[math.random(1, #self.m_RandomFireStrings)])
 		elseif v.m_PickupType == "GroupProperty" then
-			return ("Die Immobilie '%s' in %s %s"):format(
+			return ("The property '%s' in %s %s"):format(
 				v.m_PickupName,
 				zoneName,
 				self.m_RandomFireStrings[math.random(1, #self.m_RandomFireStrings)])
 		end
 	end
-	return "keine passenden Immobilien gefunden"
+	return "No suitable properties found"
 end
 
 function FireManager:Event_deleteFire(id)
 	if client:getRank() < ADMIN_RANK_PERMISSION["editFire"] then
-		client:sendError(_("Du darfst diese Funktion nicht nutzen!", client))
+		client:sendError(_("You are not authorised to use this function!", client))
 		return
 	end
 	sql:queryExec("DELETE FROM ??_fires  WHERE Id = ?;", sql:getPrefix(), id)
@@ -330,6 +331,6 @@ function FireManager:Event_deleteFire(id)
 		self:stopCurrentFire()
 	end
 	self.m_Fires[id] = nil
-	client:sendSuccess(_("Feuer %d gelöscht.", client, id))
+	client:sendSuccess(_("Fire %d extinguished.", client, id))
 	self:sendAdminFireData(client)
 end

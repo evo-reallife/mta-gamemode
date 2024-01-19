@@ -63,22 +63,22 @@ function WeedTruck:constructor(driver)
 	self.m_WaterCheckTimer = setTimer(bind(self.isWeedTruckInWater, self), 10000, 0)
 	self.m_IsSubmerged = false
 	
-	PlayerManager:getSingleton():breakingNews("Ein Weed-Transport wurde soeben gestartet!")
-	Discord:getSingleton():outputBreakingNews("Ein Weed-Transport wurde soeben gestartet!")
-	FactionState:getSingleton():sendWarning("Ein Weed-Transport wurde gestartet!", "Neuer Einsatz", true, serialiseVector(WeedTruck.spawnPos))
+	PlayerManager:getSingleton():breakingNews("A Weed-Transport has just started!")
+	Discord:getSingleton():outputBreakingNews("A Weed-Transport has just started!")
+	FactionState:getSingleton():sendWarning("A Weed-Transport was started!", "New Application", true, serialiseVector(WeedTruck.spawnPos))
 	
 	for i, faction in pairs(FactionEvil:getSingleton():getFactions()) do
 		local pos = factionDTDestination[faction:getId()][1]
 		self:addDestinationPed(faction, "evil")
 		self.m_DestinationBlips[faction:getId()] = Blip:new("Marker.png", pos.x, pos.y, {factionType = {"State", "Evil"}, duty = true}, 9999, BLIP_COLOR_CONSTANTS.Red)
-		self.m_DestinationBlips[faction:getId()]:setDisplayText(("Drogentruck-Abgabepunkt (%s)"):format(faction:getShortName()))
+		self.m_DestinationBlips[faction:getId()]:setDisplayText(("Weed-Truck drop-off point (%s)"):format(faction:getShortName()))
 		self.m_DestinationBlips[faction:getId()]:setZ(pos.z)
 	end
 
 	local pos = factionDTDestination[2][1]
 	self:addDestinationPed(FactionManager:getSingleton():getFromId(2), "state")
 	self.m_DestinationBlips["state"] = Blip:new("Marker.png", pos.x, pos.y, {factionType = {"State", "Evil", duty = true}}, 9999, BLIP_COLOR_CONSTANTS.Blue)
-	self.m_DestinationBlips["state"]:setDisplayText("Drogentruck-Abgabe (Staat)")
+	self.m_DestinationBlips["state"]:setDisplayText("Weed-Truck Tax (state)")
 	self.m_DestinationBlips["state"]:setZ(pos.z)
 
 	self.m_Event_onPackageClickFunc =bind(self.Event_onPackageClick,self)
@@ -131,7 +131,7 @@ end
 end]]
 
 function WeedTruck:timeUp()
-	PlayerManager:getSingleton():breakingNews("Der Weed-Transport wurde beendet! Den Verbrechern ist die Zeit ausgegangen!")
+	PlayerManager:getSingleton():breakingNews("The Weed-Transport has been stopped! The Criminals have run out of time!")
 	delete(self)
 end
 
@@ -193,10 +193,10 @@ function WeedTruck:Event_onPackageClick(button, state, player)
 			if getDistanceBetweenPoints3D(player:getPosition(), source:getPosition()) < 3 then
 				player:attachPlayerObject(source)
 			else
-				player:sendError(_("Du bist zu weit vom Paket entfernt!", player))
+				player:sendError(_("You're too far away from the package!", player))
 			end
 		else
-			player:sendError(_("Nur Fraktionisten können Drogenpakete aufheben!",player))
+			player:sendError(_("Only factions can pick up Weed-Packages!",player))
 		end
 	end
 end
@@ -204,7 +204,7 @@ end
 --Vehicle Events
 function WeedTruck:Event_OnWeedTruckStartEnter(player,seat)
 	if seat == 0 and not player:getFaction() then
-		player:sendError(_("Den Weed-Truck können nur Fraktionisten fahren!",player))
+		player:sendError(_("Only factions can drive the weed truck!",player))
 		cancelEvent()
 	end
 end
@@ -213,8 +213,8 @@ function WeedTruck:Event_OnWeedTruckDestroy()
 	if self and not self.m_Destroyed then
 		self.m_Destroyed = true
 		self:Event_OnWeedTruckExit(self.m_Driver,0)
-		PlayerManager:getSingleton():breakingNews("Der Weed-LKW wurde soeben zerstört!")
-		Discord:getSingleton():outputBreakingNews("Der Weed-LKW wurde soeben zerstört!")
+		PlayerManager:getSingleton():breakingNews("The Weed-Truck has just been destroyed!")
+		Discord:getSingleton():outputBreakingNews("The Weed-Truck has just been destroyed!")
 		delete(self)
 	end
 end
@@ -264,11 +264,11 @@ function WeedTruck:Event_onDestinationPedClick(button, state, player)
 							elseif source.type == "state" then
 								self:onDestinationPedClick(player, source, true)
 							else
-								player:sendError(_("Du kannst hier nicht abgeben!",player))
+								player:sendError(_("You can't hand in here!",player))
 							end
 						end
 					else
-						player:sendError(_("Nur Fraktionisten können Drogenpakete abgeben!",player))
+						player:sendError(_("Only factions can hand in Weed-Packages!",player))
 					end
 				end
 			end
@@ -281,32 +281,32 @@ function WeedTruck:onDestinationPedClick(player, ped, stateDestination)
 	local package
 	local breakingNewsText
 
-	if player.vehicle then return player:sendInfo(_("Bitte steig aus um die Pakete abzugeben!", player)) end
+	if player.vehicle then return player:sendInfo(_("Please get out to drop off the packages!", player)) end
 
 	if player:getPlayerAttachedObject() then
 		if player:getPlayerAttachedObject():getModel() == 1575 and player:getPlayerAttachedObject():getData("drugPackage") then
 			if ped.faction == faction then
 				if stateDestination then
-					breakingNewsText = "Paket %d von %d wurde vom %s beschlagnahmt!"
+					breakingNewsText = "Package %d from %d was confiscated by %s!"
 					PlayerManager:getSingleton():breakingNews(breakingNewsText, 10-self:getRemainingPackageAmount()+1, WeedTruck.MaxPackages, faction:getShortName())
 					StateEvidence:getSingleton():addItemToEvidence(player, "Weed", WeedTruck.WeedPerPackage, false)
 				else
 					if ped.faction == player:getFaction() then
 						player:getInventory():giveItem("Weed", WeedTruck.WeedPerPackage)
-						breakingNewsText = "Paket %d von %d wurde von der/dem %s abgegeben!"
+						breakingNewsText = "Package %d from %d has been delivered by %s!"
 					else
-						breakingNewsText = "Paket %d von %d wurde an das/die %s übergeben!"
+						breakingNewsText = "Package %d from %d has been handed over to %s!"
 					end
 					PlayerManager:getSingleton():breakingNews(breakingNewsText, 10-self:getRemainingPackageAmount()+1, WeedTruck.MaxPackages, ped.faction:getShortName())
 				end
 			else 
 				if stateDestination then
-					player:sendPedChatMessage(ped:getData("Ped:Name"), _("Vielen Dank für deine Kooperation mit dem Staat.", player))
+					player:sendPedChatMessage(ped:getData("Ped:Name"), _("Thank you for your co-operation with the state.", player))
 					StateEvidence:getSingleton():addItemToEvidence(player, "Weed", WeedTruck.WeedPerPackage, false)
 				else 
-					player:sendPedChatMessage(ped:getData("Ped:Name"), _("Haste noch mehr? Wenn nicht kannste wieder gehen.", player))
+					player:sendPedChatMessage(ped:getData("Ped:Name"), _("Do you have any more? If not, you can go again.", player))
 				end
-				breakingNewsText = "Paket %d von %d wurde an das/die %s übergeben!"
+				breakingNewsText = "Package %d from %d was handed over to %s!"
 				PlayerManager:getSingleton():breakingNews(breakingNewsText, 10-self:getRemainingPackageAmount()+1, WeedTruck.MaxPackages, ped.faction:getShortName())
 				player:giveAchievement(111) -- Snitch
 				outputDebug("giveAchievement 111")
@@ -327,7 +327,7 @@ function WeedTruck:isWeedTruckInWater()
 		if isElementInWater(self.m_Truck) then
 			self.m_WaterNotificationTimer = setTimer(
 				function()
-					PlayerManager:getSingleton():breakingNews("Neueste Quellen berichten, dass der Weed-Transporter einen Unfall hatte und ins Wasser gefahren ist!")
+					PlayerManager:getSingleton():breakingNews("Latest Sources Report that the weed transporter had an accident and drove into the water!")
 				end
 			, 180000, 1)
 			self.m_IsSubmerged = true

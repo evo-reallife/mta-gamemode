@@ -50,21 +50,22 @@ function MWeedTruck:onStartPointHit(hitElement, matchingDimension)
 			if faction:isEvilFaction() and hitElement:isFactionDuty() then
 				if PermissionsManager:getSingleton():isPlayerAllowedToStart(hitElement, "faction", "WeedTruck") then
 					if ActionsCheck:getSingleton():isActionAllowed(hitElement) then
+						-- "AviRex" when the police is less then 2 members or following by WEEDTRUCK_MIN_MEMBERS so the evil faction can't make a weed truck action
 						if FactionState:getSingleton():countPlayers() < WEEDTRUCK_MIN_MEMBERS then
-							hitElement:sendError(_("Es müssen mindestens %d Staatsfraktionisten online sein!",hitElement, WEEDTRUCK_MIN_MEMBERS))
+							hitElement:sendError(_("There must be at least %d state factionists online!",hitElement, WEEDTRUCK_MIN_MEMBERS))
 							return false
 						end
-						QuestionBox:new(hitElement, _("Möchtest du einen Weed-Truck starten? Kosten: %s", hitElement, toMoneyString(MWeedTruck.Settings["costs"])), "weedTruckStart", false, source, 10)
+						QuestionBox:new(hitElement, _("Would you like to start a weed truck? Costs: %s", hitElement, toMoneyString(MWeedTruck.Settings["costs"])), "weedTruckStart", false, source, 10)
 					end
 				else
-					hitElement:sendError(_("Du bist nicht berechtigt einen Weed-Truck zu starten!",hitElement))
+					hitElement:sendError(_("You are not authorised to start a weed truck!",hitElement))
 				end
 
 			else
-				hitElement:sendError(_("Den Weed-Truck können nur Mitglieder böser Fraktionen starten!",hitElement))
+				hitElement:sendError(_("Only members of evil factions can start the weed truck!",hitElement))
 			end
 		else
-			hitElement:sendError(_("Den Weed-Truck können nur Fraktions-Mitglieder starten!",hitElement))
+			hitElement:sendError(_("Only faction members can start the weed truck!",hitElement))
 		end
 	end
 end
@@ -82,10 +83,10 @@ function MWeedTruck:Event_weedTruckStart()
 						FactionState:getSingleton():sendMoveRequest(TSConnect.Channel.STATE)
 						StatisticsLogger:getSingleton():addActionLog("Weed-Truck", "start", source, faction, "faction")
 					else
-						source:sendError(_("Du hast nicht genug Geld in der Fraktionskasse! (%s)", source, toMoneyString(MWeedTruck.Settings["costs"])))
+						source:sendError(_("You don't have enough money in the faction vault! (%s)", source, toMoneyString(MWeedTruck.Settings["costs"])))
 					end
 				else
-					source:sendError(_("Du bist nicht berechtigt einen Weed-Truck zu starten!", source))
+					source:sendError(_("You aren't authorised to start a weed truck!", source))
 				end
 			end
 		end
