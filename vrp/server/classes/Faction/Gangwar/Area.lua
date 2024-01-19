@@ -114,8 +114,8 @@ end
 function Area:attack( faction1, faction2, attackingPlayer)
 	if not self.m_IsAttacked then
 		self.m_IsAttacked = true
-		faction1:sendMessage("[Gangwar] #FFFFFFIhre Fraktion hat einen Attack gestartet! ( Gebiet: "..self.m_Name.." )", 0,204,204,true)
-		faction2:sendMessage("[Gangwar] #FFFFFFIhre Fraktion wurde attackiert von "..faction1.m_Name_Short.." ! ( Gebiet: "..self.m_Name.." )", 204,20,0,true)
+		faction1:sendMessage("[Gangwar] #FFFFFFYour Faction Has Initiated An Attack! (Area: "..self.m_Name.." )", 0,204,204,true)
+		faction2:sendMessage("[Gangwar] #FFFFFFYour Faction Has Been Attacked By "..faction1.m_Name_Short.."! (Area: "..self.m_Name.." )", 204,20,0,true)
 		self.m_AttackSession = AttackSession:new( self, faction1 , faction2, attackingPlayer)
 		self.m_LastAttack = getRealTime().timestamp
 		self.m_RadarArea:delete()
@@ -123,12 +123,12 @@ function Area:attack( faction1, faction2, attackingPlayer)
 		self:createRadar()
 		self.m_GangwarManager.m_GangwarGuard:addAttack( faction1 )
 		local attackCount = self.m_GangwarManager.m_GangwarGuard:getAttackCount( faction1 )
-		faction1:sendMessage("[Gangwar] #FFFFFFDurch diesen Attack (Nr. "..attackCount..") ist eure Cooldown-Zeit auf ".. (30+(10*attackCount)).." Sekunden gestiegen !", 204,204, 0,true)
+		faction1:sendMessage("[Gangwar] #FFFFFFDue to this attack (No. "..attackCount.."), your cooldown time has increased to ".. (30+(10*attackCount)).." seconds!", 204,204, 0,true)
 		self.m_RadarArea:setFlashing(true)
 		setPickupType(self.m_Pickup,3,GANGWAR_ATTACK_PICKUPMODEL)
 		self.m_GangwarManager:addAreaToAttacks( self )
 		self:createSurroundingCol()
-		faction1:addLog(attackingPlayer, "Gangwar", ("hat das Gebiet %s attackiert!"):format(self.m_Name))
+		faction1:addLog(attackingPlayer, "Gangwar", ("attacked the area %s!"):format(self.m_Name))
 	end
 end
 

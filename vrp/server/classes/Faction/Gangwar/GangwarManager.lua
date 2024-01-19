@@ -114,9 +114,9 @@ function Gangwar:onAreaPayday()
 				areaCounts[facObj] = count
 				amount = (count * (GANGWAR_PAYOUT_PER_PLAYER * #playersOnline)) + (GANGWAR_PAYOUT_PER_AREA * count)
 				self.m_BankAccountServer:transferMoney(facObj, amount+amount2, "Gangwar-Payday", "Faction", "Gangwar")
-				facObj:sendMessage("Gangwar-Payday: #FFFFFFEure Fraktion erhält: "..amount.." $ (Pro Online-Member:"..GANGWAR_PAYOUT_PER_PLAYER.." und Pro Gebiet: "..GANGWAR_PAYOUT_PER_AREA.."$)" , 0, 200, 0, true)
+				facObj:sendMessage("Gangwar Payday: #FFFFFFYour faction receives: "..amount.." $ (Per online member: "..GANGWAR_PAYOUT_PER_PLAYER.." and per area: "..GANGWAR_PAYOUT_PER_AREA.."$)", 0, 200, 0, true)
 			else
-				facObj:sendMessage("Gangwar Payday: Es sind nicht genügend Spieler online für den Gangwar-Payday!" , 200, 0, 0, true)
+				facObj:sendMessage("Gangwar Payday: There aren't enough players online for Gangwar Payday!" , 200, 0, 0, true)
 			end
 		end
 	end
@@ -129,7 +129,7 @@ function Gangwar:onAreaPayday()
 				count = 0
 			end
 			amount2 = math.floor((1 - ( count/areasInTotal)) * PAYDAY_ACTION_BONUS )
-			faction:sendMessage("Fraktions Payday: Grundeinkommen der Fraktion: "..amount2.."$ !" , 0, 200, 0, true)
+			faction:sendMessage("Group Payday: Basic income for the faction: "..amount2.."$ !" , 0, 200, 0, true)
 		end
 	end
 end
@@ -274,7 +274,7 @@ function Gangwar:attackArea( player )
 	local faction = player.m_Faction
 	if faction then
 		if faction:isStateFaction() == true or faction.m_Id == 4 then
-			return player:sendError(_("Du bist nicht berechtigt am Gangwar teilzunehmen!",  player))
+			return player:sendError(_("You are not authorised to take part in the Gangwar!",  player))
 		end
 		local id = player.m_Faction.m_Id
 		local mArea = player.m_InsideArea
@@ -302,30 +302,30 @@ function Gangwar:attackArea( player )
 										self.m_LastFaction1 = faction 
 										self.m_LastFaction2 = faction2
 									else
-										player:sendError(_("Dieses Gebiet ist noch nicht attackierbar!",  player))
+										player:sendError(_("This area isn't attackable yet!",  player))
 									end
 								else 
-									player:sendError(_("Der Gangwar ist noch für "..remainingTime.." Sekunden im Cooldown!",  player))
+									player:sendError(_("The Gang war is still in cooldown for "..remainingTime.." seconds!", player))
 								end
 							else
-								player:sendError(_("Es läuft zurzeit ein Gangwar!",  player))
+								player:sendError(_("There is currently a Gang war going on!",  player))
 							end
 						else
-							player:sendError(_("Es müssen mind. "..GANGWAR_MIN_PLAYERS.." aus der Gegner-Fraktion online sein!",  player))
+							player:sendError(_("At least "..GANGWAR_MIN_PLAYERS.." players from the opposing faction must be online!", player))
 						end
 					else
-						player:sendError(_("Es müssen mind. "..GANGWAR_MIN_PLAYERS.." aus deiner Fraktion online sein!",  player))
+						player:sendError(_("At least "..GANGWAR_MIN_PLAYERS.." players from your faction must be online!", player))
 					end
 				else
-					player:sendError(_("Du kannst dich nicht selbst angreifen!",  player))
+					player:sendError(_("You can't attack yourself!",  player))
 				end
 			else
-				player:sendError(_("Du bist an keinem Gebiet!",  player))
+				player:sendError(_("You're not in any area!",  player))
 			end
 		else
-			player:sendError(_("Du bist an keinem Gebiet!",  player))
+			player:sendError(_("You're not in any area!",  player))
 		end
 	else
-		player:sendError(_("Du bist in keiner Fraktion!",  player))
+		player:sendError(_("You're not in any faction!",  player))
 	end
 end

@@ -165,8 +165,8 @@ function AttackSession:addParticipantToList( player, bLateJoin )
 		player:triggerEvent("GangwarQuestion:new")
 		player.g_damage = 0 
 		player.g_kills = 0
-		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFDer Spieler "..player.name.." jointe dem Gangwar nach!",0,204,204,true)
-		self.m_Faction2:sendMessage("[Gangwar] #FFFFFFDer Spieler "..player.name.." jointe dem Gangwar nach!",0,204,204,true)
+		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFThe player "..player.name.." joined the gang war!",0,204,204,true)
+		self.m_Faction2:sendMessage("[Gangwar] #FFFFFFThe player "..player.name.." joined the gang war!",0,204,204,true)		
 	end
 end
 
@@ -245,11 +245,11 @@ function AttackSession:onPurposlyDisqualify( player, bAfk, bPick)
 			reason = "(AFK)"
 		end
 		if bPick then
-			reason = "(Nicht eingeteilt)"
+			reason = "(Not Classified)"
 		end
 		self:disqualifyPlayer( player )
-		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFDer Spieler "..getPlayerName(player).." nimmt nicht am Gangwar teil! "..reason, 100, 120, 100, true)
-		self.m_Faction2:sendMessage("[Gangwar] #FFFFFFDer Spieler "..getPlayerName(player).." nimmt nicht am Gangwar teil! "..reason, 100, 120, 100, true)
+		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFThe player "..getPlayerName(player).." is not participating in the gang war! "..reason, 100, 120, 100, true)
+		self.m_Faction2:sendMessage("[Gangwar] #FFFFFFThe player "..getPlayerName(player).." is not participating in the gang war! "..reason, 100, 120, 100, true)		
 	end
 end
 
@@ -305,9 +305,8 @@ function AttackSession:onPlayerWasted( player, killer, weapon, bodypart )
 				triggerClientEvent("onGangwarKill", killer)
 			end
 		end
-		player.m_Faction:sendMessage("[Gangwar] #FFFFFFEin Mitglied ("..player.name..") ist getötet worden!",200,0,0,true)
-		local faction = player.m_Faction == self.m_Faction1 and self.m_Faction2 or self.m_Faction1
-		faction:sendMessage(_("[Gangwar] #FFFFFFEin Gegner ("..player.name..") ist %s!", player, killer and "getötet worden" or "gestorben"),0,200,0,true)
+		player.m_Faction:sendMessage("[Gangwar] #FFFFFFA member ("..player.name..") has been killed!", 200, 0, 0, true)		local faction = player.m_Faction == self.m_Faction1 and self.m_Faction2 or self.m_Faction1
+		faction:sendMessage(_("[Gangwar] #FFFFFFAn enemie ("..player.name..") has %s!", player, killer and "been killed" or "died"), 0, 200, 0, true)
 		self:onPlayerLeaveCenter( player ) 
 		self:disqualifyPlayer( player )
 	end
@@ -350,7 +349,7 @@ function AttackSession:onSubmitPick( participants )
 				self.m_PickTick = getTickCount()
 				self:synchronizeLists( )
 			else 
-				client:sendError(_("Du hast keine Berechtigung die Spieler einzuteielen!", client))
+				client:sendError(_("You can't start Gangwar", client))
 			end
 		end
 	end
@@ -383,8 +382,8 @@ end
 function AttackSession:setCenterCountdown()
 	if self.m_Active then
 		self.endReason = 3
-		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFIhr habt noch "..GANGWAR_CENTER_TIMEOUT.." Sekunden Zeit die Flagge zu erreichen!",200,0,0,true)
-		self.m_Faction2:sendMessage("[Gangwar] #FFFFFFEure Gegner haben noch "..GANGWAR_CENTER_TIMEOUT.." Sekunden Zeit die Flagge zu erreichen!",0,200,0,true)
+		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFYou have "..GANGWAR_CENTER_TIMEOUT.." seconds left to reach the flag!", 200, 0, 0, true)
+		self.m_Faction2:sendMessage("[Gangwar] #FFFFFFYour enemies have "..GANGWAR_CENTER_TIMEOUT.." seconds left to reach the flag!", 0, 200, 0, true)		
 		if self.m_HoldCenterTimer and isTimer(self.m_HoldCenterTimer) then killTimer(self.m_HoldCenterTimer) end 
 		if self.m_NotifiyAgainTimer and isTimer(self.m_NotifiyAgainTimer) then killTimer(self.m_NotifiyAgainTimer) end 
 		self.m_HoldCenterTimer = setTimer( bind(self.attackLose, self), GANGWAR_CENTER_TIMEOUT*1000,1)
@@ -395,25 +394,25 @@ end
 function AttackSession:notifyFactions()
 	if self.endReason == 1 then
 		for k, v in ipairs(self.m_Faction1:getOnlinePlayers()) do
-			v:sendInfo(_("Alle Mitglieder sind gefallen!",v))
+			v:sendInfo(_("All members have been killed!",v))
 		end
 		for k, v in ipairs(self.m_Faction2:getOnlinePlayers()) do
-			v:sendInfo(_("Alle Gegner sind eliminiert!",v))
+			v:sendInfo(_("All enemies have been killed!",v))
 		end
 	elseif self.endReason == 2 then
 		for k, v in ipairs(self.m_Faction1:getOnlinePlayers()) do
-			v:sendInfo(_("Alle Gegner sind eliminiert!",v))
+			v:sendInfo(_("All enemies have been killed!",v))
 		end
 		for k, v in ipairs(self.m_Faction2:getOnlinePlayers()) do
-			v:sendInfo(_("Alle Mitglieder sind gefallen!",v))
+			v:sendInfo(_("All members have been killed!",v))
 		end
-		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFAlle Gegner wurden eliminiert!",200,0,0,true)
+		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFAll enemies have been eliminated!", 200, 0, 0, true)
 	elseif self.endReason == 3 then
 		for k, v in ipairs(self.m_Faction1:getOnlinePlayers()) do
-			v:sendInfo(_("Die Flagge wurde nicht gehalten!",v))
+			v:sendInfo(_("The flag hasn't been held!",v))
 		end
 		for k, v in ipairs(self.m_Faction2:getOnlinePlayers()) do
-			v:sendInfo(_("Die Gegner haben die Flagge nicht gehalten!",v))
+			v:sendInfo(_("The enemies didn't hold the flag!",v))
 		end
 	end
 end
@@ -440,8 +439,8 @@ end
 
 function AttackSession:notifyFaction1( )
 	if not self:backupCenterCheck() then 
-		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFIhr habt nur noch "..math.floor(GANGWAR_CENTER_TIMEOUT/2).." Sekunden Zeit die Flagge zu erreichen!",200,0,0,true)
-		self.m_Faction2:sendMessage("[Gangwar] #FFFFFFEure Gegner haben nur noch "..math.floor(GANGWAR_CENTER_TIMEOUT/2).." Sekunden Zeit die Flagge zu erreichen!",0,200,0,true)
+		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFYou have only "..math.floor(GANGWAR_CENTER_TIMEOUT/2).." seconds left to reach the flag!", 200, 0, 0, true)
+		self.m_Faction2:sendMessage("[Gangwar] #FFFFFFYour enemies have only "..math.floor(GANGWAR_CENTER_TIMEOUT/2).." seconds left to reach the flag!", 0, 200, 0, true)		
 	end
 end
 
@@ -483,8 +482,8 @@ function AttackSession:attackLose() --// loose for team1
 		v:givePoints(20)
 	end
 	self.m_AreaObj:update()
-	self.m_Faction1:sendMessage("[Gangwar] #FFFFFFDer Angriff ist gescheitert!",200,0,0,true)
-	self.m_Faction2:sendMessage("[Gangwar] #FFFFFFDas Gebiet wurde verteidigt!",0,180,40,true)
+	self.m_Faction1:sendMessage("[Gangwar] #FFFFFFThe Attack has failed!", 200, 0, 0, true)
+	self.m_Faction2:sendMessage("[Gangwar] #FFFFFFThe Area has been defended!", 0, 180, 40, true)	
 	self:logSession(self.m_Faction2)
 	self.m_AreaObj:attackEnd(  )
 	self:stopClients()
@@ -501,8 +500,8 @@ function AttackSession:attackWin() --// win for team1
 	end
 	self.m_AreaObj:update()
 
-	self.m_Faction2:sendMessage("[Gangwar] #FFFFFFDas Gebiet ist verloren!",2000,0,0,true)
-	self.m_Faction1:sendMessage("[Gangwar] #FFFFFFDer Angriff war erfolgreich!",0,180,40,true)
+	self.m_Faction2:sendMessage("[Gangwar] #FFFFFFThe Area is lost!", 200, 0, 0, true)
+	self.m_Faction1:sendMessage("[Gangwar] #FFFFFFThe Attack was successful!", 0, 180, 40, true)
 	self:logSession(self.m_Faction1)
 	self.m_AreaObj:attackEnd(  )
 	self:stopClients()
@@ -579,7 +578,7 @@ function AttackSession:onVehicleEnter( pEnter )
 	if pEnter.m_Faction == self.m_Faction1 then
 	
 	else
-		pEnter:sendError(_("Sie sind kein Angreifer!", pEnter))
+		pEnter:sendError(_("You are not an attacker!", pEnter))
 		cancelEvent()
 	end
 end
@@ -603,7 +602,7 @@ function AttackSession:createWeaponBox()
 	addEventHandler("ClientBox:onCloseWeaponBox", root, self.m_BindCloseWeaponFunc )
 	self.m_BindBoxTimer = function() self:destroyWeaponBox() end
 	self.m_WeaponBoxTimer = setTimer(self.m_BindBoxTimer, 60000,1)
-	self.m_Faction1:sendMessage("[Gangwar] #FFFFFFDie Waffenbox ist für eine Minute vorhanden!",0,204,204,true)
+	self.m_Faction1:sendMessage("[Gangwar] #FFFFFFThe Weapons Box is available for one minute!", 0, 204, 204, true)
 end
 
 function AttackSession:generateWeapons( )
@@ -663,11 +662,11 @@ function AttackSession:takeWeaponFromBox( key )
 		local weaponId = self.m_BoxWeapons[key][1]
 
 		if client:getWeaponLevel() < MIN_WEAPON_LEVELS[weaponId] then
-			client:sendError(_("Dein Waffenlevel ist zu niedrig! (Benötigt: %i)", client, MIN_WEAPON_LEVELS[weaponId]))
+			client:sendError(_("Your weapon level is too low! (Requires: %i)", client, MIN_WEAPON_LEVELS[weaponId]))
 			return
 		end
 		giveWeapon( source, weaponId, self.m_BoxWeapons[key][2], true )
-		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFDer Spieler "..getPlayerName( source ).." nahm sich eine "..WEAPON_NAMES[weaponId].." aus der Box heraus.",0,204,204,true)
+		self.m_Faction1:sendMessage("[Gangwar] #FFFFFFThe Player "..getPlayerName(source).." took a "..WEAPON_NAMES[weaponId].." from the box.", 0, 204, 204, true)
 		table.remove( self.m_BoxWeapons, key )
 		self:refreshWeaponBox(  )
 	end
