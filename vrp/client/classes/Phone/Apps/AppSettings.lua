@@ -41,7 +41,7 @@ function AppSettings:onOpen(form)
 			core:getConfig():set("Phone", "Background", text)
 		end
 
-	local backgrounds = {"Xperia_X", "Google_Pixel", "iOS_7", "iOS_10", "Nexus", "Xperia_Z3", "OnePlus_3T"}
+	local backgrounds = {"Xperia_X", "Google_Pixel", "iOS_7", "iOS_10", "Nexus", "Xperia_Z3", "OnePlus_3T", "Anime_1"}
 	for _, background in pairs(backgrounds) do
 		self.m_BackgroundChanger:addItem(background)
 	end

@@ -1477,7 +1477,7 @@
 	<vrpfile src="files/images/Events/Bonus/Bonus_Deagle.png" />
 	<vrpfile src="files/images/Events/Bonus/Bonus_Dildo.png" />
 	<vrpfile src="files/images/Events/Bonus/Bonus_Heroin.png" />
-	<vrpfile src="files/images/Events/Bonus/Bonus_Karma.png" />
+	<!-- <vrpfile src="files/images/Events/Bonus/Bonus_Karma.png" /> -->
 	<vrpfile src="files/images/Events/Bonus/Bonus_NickChange.png" />
 	<vrpfile src="files/images/Events/Bonus/Bonus_Money.png" />
 	<vrpfile src="files/images/Events/Bonus/Bonus_Payday.png" />
