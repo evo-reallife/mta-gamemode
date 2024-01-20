@@ -59,20 +59,20 @@ function GangwarQuestion:render()
 	local dur = self.m_EndTick - self.m_Start
 	local prog = elap / dur
 	local w_x = interpolateBetween(w,0,0,w*0.8,0,0,prog,"OutBack")
-	dxDrawImage(w_x,h*0.55,w*0.2,h*0.05,"files/images/gangwar/teilnehmen.png")
+	dxDrawImage(w_x,h*0.55,w*0.2,h*0.05,"files/images/gangwar/Question.png")
 	dxDrawRectangle(w_x,h*0.6,w*0.2,h*0.1,tocolor(0,0,0,150))
 	self:dxDrawBoxShape( w_x,h*0.6,w*0.2,h*0.1 ,tocolor(0,104,104,255))
 
 	dxDrawRectangle(w_x+w*0.04,h*0.61,w*0.04,h*0.035,tocolor(0,104,104,180))
 	self:dxDrawBoxShape( w_x+w*0.04,h*0.61,w*0.04,h*0.035 )
 	self:dxDrawBoxShape( w_x+w*0.02,h*0.61,w*0.02,h*0.035 )
-	self:dxDrawBoxText( "Ja",w_x+w*0.04,h*0.61,w*0.04,h*0.035,tocolor(0,180,40,255),1,"default-bold","center","center"  )
+	self:dxDrawBoxText( "Yes",w_x+w*0.04,h*0.61,w*0.04,h*0.035,tocolor(0,180,40,255),1,"default-bold","center","center"  )
 
 
 	dxDrawRectangle(w_x+w*0.04,h*0.655,w*0.04,h*0.035,tocolor(0,104,104,180))
 	self:dxDrawBoxShape(w_x+w*0.04,h*0.655,w*0.04,h*0.035 )
 	self:dxDrawBoxShape( w_x+w*0.02,h*0.655,w*0.02,h*0.035 )
-	self:dxDrawBoxText( "Nein",w_x+w*0.04,h*0.655,w*0.04,h*0.035,tocolor(180,0,0,255),1,"default-bold","center","center"  )
+	self:dxDrawBoxText( "No",w_x+w*0.04,h*0.655,w*0.04,h*0.035,tocolor(180,0,0,255),1,"default-bold","center","center"  )
 
 	if self:isMouseOver(w_x+w*0.02,h*0.61,w*0.06,h*0.035 ) then
 		dxDrawImage(w_x+w*0.02,h*0.61,w*0.02,h*0.035,"files/images/gangwar/tick.png")
@@ -85,9 +85,9 @@ function GangwarQuestion:render()
 	end
 
 	if self.m_DrawSure then
-		self:dxDrawBoxText( "Bitte zum bestätigen noch einmal klicken!",(w_x+w*0.11)-1,(h*0.63)-1,w*0.08,h*0.03,tocolor(0,0,0,255),1,"default-bold","center","center",true,true  )
-		self:dxDrawBoxText( "Bitte zum bestätigen noch einmal klicken!",(w_x+w*0.11)+1,(h*0.63)+1,w*0.08,h*0.03,tocolor(0,0,0,255),1,"default-bold","center","center" ,true,true )
-		self:dxDrawBoxText( "Bitte zum bestätigen noch einmal klicken!",w_x+w*0.11,h*0.63,w*0.08,h*0.03,tocolor(0,204,204,255),1,"default-bold","center","center" ,true,true )
+		self:dxDrawBoxText( "Please click again to confirm!",(w_x+w*0.11)-1,(h*0.63)-1,w*0.08,h*0.03,tocolor(0,0,0,255),1,"default-bold","center","center",true,true  )
+		self:dxDrawBoxText( "Please click again to confirm!",(w_x+w*0.11)+1,(h*0.63)+1,w*0.08,h*0.03,tocolor(0,0,0,255),1,"default-bold","center","center" ,true,true )
+		self:dxDrawBoxText( "Please click again to confirm!",w_x+w*0.11,h*0.63,w*0.08,h*0.03,tocolor(0,204,204,255),1,"default-bold","center","center" ,true,true )
 	end
 end
 

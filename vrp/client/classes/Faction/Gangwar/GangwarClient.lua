@@ -118,10 +118,10 @@ function GangwarClient:render_Window_options( )
 	local color1 = tocolor(255,255,255,alpha)
 	local color2 = tocolor(255,255,255,alpha)
 	if self:isMouseOver( w_x,(h*0.5)-(w*0.05),w*0.15,w*0.05) then
-		color1 = tocolor(0,204,204,alpha)
+		color1 = tocolor(72,219,251,alpha)
 		self.m_Over = 1
 	elseif self:isMouseOver( w_x,(h*0.5)-(w*0.05)+(w*0.05),w*0.15,w*0.05) then
-		color2 = tocolor(0,204,204,alpha)
+		color2 = tocolor(255,107,107,alpha)
 		self.m_Over = 2
 	else self.m_Over = nil
 	end

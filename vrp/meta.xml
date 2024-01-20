@@ -2042,7 +2042,7 @@
 	<vrpfile src="files/images/Gangwar/Close.png"/>
 	<vrpfile src="files/images/Gangwar/cross.png"/>
 	<vrpfile src="files/images/Gangwar/tick.png"/>
-	<vrpfile src="files/images/Gangwar/teilnehmen.png"/>
+	<vrpfile src="files/images/Gangwar/Question.png"/>
 	<vrpfile src="files/images/Gangwar/gw_damage.png"/>
 	<vrpfile src="files/images/Gangwar/gw_kill.png"/>
 	<vrpfile src="files/images/Gangwar/gw_time.png"/>
