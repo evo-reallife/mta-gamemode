@@ -9,7 +9,7 @@ MovementRecorder = inherit(Object)
 
 function MovementRecorder:constructor(vehicleModel)
 	self.m_VehicleDummy = createVehicle(vehicleModel, 1337, 1337, 1337)
-	self.m_VehicleDummy:setPlateText("eXo")
+	self.m_VehicleDummy:setPlateText("eVo")
 	self.m_VehicleDummy:setFrozen(true)
 	self.m_VehicleDummy:setCollisionsEnabled(false)
 	self.m_VehicleDummy:setAlpha(150)

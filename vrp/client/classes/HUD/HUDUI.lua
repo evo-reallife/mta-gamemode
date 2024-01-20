@@ -67,8 +67,8 @@ function HUDUI:draw()
 		if self.m_DefaultHealhArmor == true then
 			self:drawVRPHealthArmor()
 		end
-	elseif self.m_UIMode == UIStyle.eXo then
-		self:drawExo()
+	-- elseif self.m_UIMode == UIStyle.eXo then
+	-- 	self:drawExo()
 	elseif self.m_UIMode == UIStyle.Chart then
 		self:drawChart()
 	end

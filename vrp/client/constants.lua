@@ -18,8 +18,11 @@ HTTP_CONNECT_ATTEMPTS = 2 -- Todo: see above
 RadarDesign = {Monochrome = 1, GTA = 2}
 for i, v in pairs(RadarDesign) do RadarDesign[v] = i end
 
-UIStyle = {vRoleplay = 1, eXo = 2, Default = 3, Chart = 4,
-		[1] = "vRoleplay", [2] = "eXo", [3] = "Default", [4] = "Chart",}
+-- UIStyle = {vRoleplay = 1, eXo = 2, Default = 3, Chart = 4,
+-- 		[1] = "vRoleplay", [2] = "eXo", [3] = "Default", [4] = "Chart",}
+
+UIStyle = {vRoleplay = 1, Default = 2, Chart = 3,
+	[1] = "vRoleplay", [2] = "Default", [3] = "Chart",}
 
 --for i, v in pairs(UIStyle) do UIStyle[v] = i end -- this doesn't work for some weird reason!
 

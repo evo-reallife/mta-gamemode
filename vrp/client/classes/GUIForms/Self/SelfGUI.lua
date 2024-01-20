@@ -828,8 +828,8 @@ function SelfGUI:onSettingChange(setting)
 			self.m_ChartFPS:setVisible(false)
 			if index == UIStyle.vRoleplay then
 				self.m_LifeArmor:setVisible(true)
-			elseif index == UIStyle.eXo then
-				self.m_HUDScale:setVisible(true)
+			-- elseif index == UIStyle.eXo then
+			-- 	self.m_HUDScale:setVisible(true)
 			elseif index == UIStyle.Chart then
 				self.m_HUDScale:setVisible(true)
 				self.m_ChartMargin:setVisible(true)
